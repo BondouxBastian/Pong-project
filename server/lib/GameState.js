@@ -1,6 +1,6 @@
 const Paddle = require('./Paddle');
 const Ball = require('./Ball');
-const { BOARD_WIDTH, PADDLE_MARGIN, PADDLE_WIDTH } = require('./constants');
+const { BOARD_WIDTH, PADDLE_MARGIN, PADDLE_WIDTH, BALL_SPEED_INCREMENT } = require('./constants');
 
 class GameState {
   constructor() {
@@ -23,6 +23,35 @@ class GameState {
     this.leftPaddle.update();
     this.rightPaddle.update();
     this.ball.update();
+    this.handlePaddleCollisions();
+  }
+
+  handlePaddleCollisions() {
+    this.resolvePaddleCollision(this.leftPaddle, 1);
+    this.resolvePaddleCollision(this.rightPaddle, -1);
+  }
+
+  resolvePaddleCollision(paddle, direction) {
+    const ball = this.ball;
+    const withinX =
+      direction === 1
+        ? ball.x - ball.radius <= paddle.x + paddle.width && ball.x - ball.radius >= paddle.x
+        : ball.x + ball.radius >= paddle.x && ball.x + ball.radius <= paddle.x + paddle.width;
+
+    const movingTowardPaddle = direction === 1 ? ball.vx < 0 : ball.vx > 0;
+    const withinY = ball.y + ball.radius >= paddle.y && ball.y - ball.radius <= paddle.y + paddle.height;
+
+    if (withinX && withinY && movingTowardPaddle) {
+      const relativeIntersectY = (ball.y - (paddle.y + paddle.height / 2)) / (paddle.height / 2);
+      const bounceAngle = relativeIntersectY * (Math.PI / 4);
+      const speed = Math.hypot(ball.vx, ball.vy) + BALL_SPEED_INCREMENT;
+
+      ball.vx = direction * Math.cos(bounceAngle) * speed;
+      ball.vy = Math.sin(bounceAngle) * speed;
+      ball.clampSpeed();
+
+      ball.x = direction === 1 ? paddle.x + paddle.width + ball.radius : paddle.x - ball.radius;
+    }
   }
 }
 
