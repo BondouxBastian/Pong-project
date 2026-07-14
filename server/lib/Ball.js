@@ -1,4 +1,4 @@
-const { BOARD_WIDTH, BOARD_HEIGHT, BALL_RADIUS, BALL_SPEED } = require('./constants');
+const { BOARD_WIDTH, BOARD_HEIGHT, BALL_RADIUS, BALL_SPEED, BALL_MAX_SPEED } = require('./constants');
 
 class Ball {
   constructor() {
@@ -27,6 +27,15 @@ class Ball {
     } else if (this.y + this.radius >= BOARD_HEIGHT) {
       this.y = BOARD_HEIGHT - this.radius;
       this.vy *= -1;
+    }
+  }
+
+  clampSpeed() {
+    const speed = Math.hypot(this.vx, this.vy);
+    if (speed > BALL_MAX_SPEED) {
+      const scale = BALL_MAX_SPEED / speed;
+      this.vx *= scale;
+      this.vy *= scale;
     }
   }
 }
