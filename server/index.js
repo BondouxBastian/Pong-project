@@ -47,6 +47,7 @@ wss.on('connection', (ws) => {
   handleConnect(connection);
 
   ws.on('message', (raw) => handleMessage(connection, raw));
+  ws.on('close', () => handleDisconnect(connection));
 });
 
 function handleConnect(connection) {
@@ -66,12 +67,32 @@ function handleMessage(connection, raw) {
     case MESSAGE_TYPES.JOIN_QUEUE:
       handleJoinQueue(connection, message);
       break;
+    case MESSAGE_TYPES.JOIN_SPECTATE:
+      handleJoinSpectate(connection);
+      break;
     case MESSAGE_TYPES.INPUT:
       if (connection.room) connection.room.handleInput(connection, message.input);
+      break;
+    case MESSAGE_TYPES.REQUEST_REMATCH:
+      if (connection.room) connection.room.restart();
       break;
     default:
       connection.send(JSON.stringify({ type: MESSAGE_TYPES.ERROR, message: 'unknown_type' }));
   }
+}
+
+function handleJoinSpectate(connection) {
+  const room = roomManager.findRoomForSpectator();
+  if (!room) {
+    connection.send(JSON.stringify({ type: MESSAGE_TYPES.ERROR, message: 'no_active_room' }));
+    return;
+  }
+  room.addSpectator(connection);
+  connection.send(JSON.stringify({ type: MESSAGE_TYPES.SPECTATE_JOINED, roomId: room.id }));
+}
+
+function handleDisconnect(connection) {
+  roomManager.removeConnection(connection);
 }
 
 function handleJoinQueue(connection, message) {
