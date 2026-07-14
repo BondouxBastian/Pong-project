@@ -1,6 +1,6 @@
 const Paddle = require('./Paddle');
 const Ball = require('./Ball');
-const { BOARD_WIDTH, PADDLE_MARGIN, PADDLE_WIDTH, BALL_SPEED_INCREMENT } = require('./constants');
+const { BOARD_WIDTH, PADDLE_MARGIN, PADDLE_WIDTH, BALL_SPEED_INCREMENT, MAX_SCORE } = require('./constants');
 
 class GameState {
   constructor() {
@@ -24,6 +24,7 @@ class GameState {
     this.rightPaddle.update();
     this.ball.update();
     this.handlePaddleCollisions();
+    this.handleScoring();
   }
 
   handlePaddleCollisions() {
@@ -51,6 +52,27 @@ class GameState {
       ball.clampSpeed();
 
       ball.x = direction === 1 ? paddle.x + paddle.width + ball.radius : paddle.x - ball.radius;
+    }
+  }
+
+  handleScoring() {
+    const ball = this.ball;
+    if (ball.x + ball.radius < 0) {
+      this.scoreRight += 1;
+      this.onPointScored();
+    } else if (ball.x - ball.radius > BOARD_WIDTH) {
+      this.scoreLeft += 1;
+      this.onPointScored();
+    }
+  }
+
+  onPointScored() {
+    if (this.scoreLeft >= MAX_SCORE) {
+      this.winner = 'left';
+    } else if (this.scoreRight >= MAX_SCORE) {
+      this.winner = 'right';
+    } else {
+      this.ball.reset(Math.random() < 0.5 ? -1 : 1);
     }
   }
 }
