@@ -13,6 +13,22 @@ class Ball {
     this.vx = Math.cos(angle) * BALL_SPEED * direction;
     this.vy = Math.sin(angle) * BALL_SPEED;
   }
+
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.handleWallCollision();
+  }
+
+  handleWallCollision() {
+    if (this.y - this.radius <= 0) {
+      this.y = this.radius;
+      this.vy *= -1;
+    } else if (this.y + this.radius >= BOARD_HEIGHT) {
+      this.y = BOARD_HEIGHT - this.radius;
+      this.vy *= -1;
+    }
+  }
 }
 
 module.exports = Ball;
