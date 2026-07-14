@@ -1,6 +1,10 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+const WebSocket = require('ws');
+
+const Connection = require('./lib/Connection');
+const MESSAGE_TYPES = require('./lib/messageTypes');
 
 const PORT = process.env.PORT || 3000;
 const CLIENT_DIR = path.join(__dirname, '..', 'client');
@@ -31,6 +35,17 @@ function contentTypeFor(filePath) {
   if (filePath.endsWith('.css')) return 'text/css';
   if (filePath.endsWith('.js')) return 'application/javascript';
   return 'application/octet-stream';
+}
+
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', (ws) => {
+  const connection = new Connection(ws);
+  handleConnect(connection);
+});
+
+function handleConnect(connection) {
+  connection.send(JSON.stringify({ type: MESSAGE_TYPES.WELCOME, id: connection.id }));
 }
 
 server.listen(PORT, () => {
