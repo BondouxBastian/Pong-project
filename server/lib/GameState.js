@@ -16,6 +16,14 @@ class GameState {
     if (side === 'left') this.leftPaddle.setInput(input);
     else if (side === 'right') this.rightPaddle.setInput(input);
   }
+
+  update() {
+    if (this.winner) return;
+
+    this.leftPaddle.update();
+    this.rightPaddle.update();
+    this.ball.update();
+  }
 }
 
 module.exports = GameState;
