@@ -42,10 +42,27 @@ const wss = new WebSocket.Server({ server });
 wss.on('connection', (ws) => {
   const connection = new Connection(ws);
   handleConnect(connection);
+
+  ws.on('message', (raw) => handleMessage(connection, raw));
 });
 
 function handleConnect(connection) {
   connection.send(JSON.stringify({ type: MESSAGE_TYPES.WELCOME, id: connection.id }));
+}
+
+function handleMessage(connection, raw) {
+  let message;
+  try {
+    message = JSON.parse(raw);
+  } catch (err) {
+    connection.send(JSON.stringify({ type: MESSAGE_TYPES.ERROR, message: 'invalid_json' }));
+    return;
+  }
+
+  switch (message.type) {
+    default:
+      connection.send(JSON.stringify({ type: MESSAGE_TYPES.ERROR, message: 'unknown_type' }));
+  }
 }
 
 server.listen(PORT, () => {
