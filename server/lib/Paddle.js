@@ -22,6 +22,19 @@ class Paddle {
     if (this.moveDown) {
       this.y += PADDLE_SPEED;
     }
+    this.clampToBoard();
+  }
+
+  clampToBoard() {
+    if (this.y < 0) this.y = 0;
+    const maxY = BOARD_HEIGHT - this.height;
+    if (this.y > maxY) this.y = maxY;
+  }
+
+  reset() {
+    this.y = (BOARD_HEIGHT - this.height) / 2;
+    this.moveUp = false;
+    this.moveDown = false;
   }
 }
 
