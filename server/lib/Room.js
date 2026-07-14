@@ -80,6 +80,12 @@ class Room {
     return !this.players.left && !this.players.right && this.spectators.size === 0;
   }
 
+  restart() {
+    this.gameState = new GameState();
+    this.started = false;
+    this.startIfReady();
+  }
+
   broadcast(message) {
     const payload = JSON.stringify(message);
     Object.values(this.players).forEach((conn) => conn && conn.send(payload));
