@@ -5,12 +5,21 @@ const WebSocket = require('ws');
 
 const Connection = require('./lib/Connection');
 const RoomManager = require('./lib/RoomManager');
+const LeaderboardStore = require('./lib/LeaderboardStore');
 const MESSAGE_TYPES = require('./lib/messageTypes');
 
 const PORT = process.env.PORT || 3000;
 const CLIENT_DIR = path.join(__dirname, '..', 'client');
 
-const roomManager = new RoomManager();
+const leaderboard = new LeaderboardStore();
+const roomManager = new RoomManager((room, winnerSide) => {
+  const winner = room.players[winnerSide];
+  const loserSide = winnerSide === 'left' ? 'right' : 'left';
+  const loser = room.players[loserSide];
+  if (winner && loser) {
+    leaderboard.recordResult(winner.name, loser.name);
+  }
+});
 
 const server = http.createServer((req, res) => {
   const filePath = req.url === '/' ? '/index.html' : req.url;
@@ -75,6 +84,9 @@ function handleMessage(connection, raw) {
       break;
     case MESSAGE_TYPES.REQUEST_REMATCH:
       if (connection.room) connection.room.restart();
+      break;
+    case MESSAGE_TYPES.GET_LEADERBOARD:
+      connection.send(JSON.stringify({ type: MESSAGE_TYPES.LEADERBOARD, ranking: leaderboard.toRanking() }));
       break;
     default:
       connection.send(JSON.stringify({ type: MESSAGE_TYPES.ERROR, message: 'unknown_type' }));
