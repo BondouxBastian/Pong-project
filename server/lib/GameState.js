@@ -75,6 +75,17 @@ class GameState {
       this.ball.reset(Math.random() < 0.5 ? -1 : 1);
     }
   }
+
+  toSnapshot() {
+    return {
+      ball: { x: this.ball.x, y: this.ball.y },
+      leftPaddle: { y: this.leftPaddle.y },
+      rightPaddle: { y: this.rightPaddle.y },
+      scoreLeft: this.scoreLeft,
+      scoreRight: this.scoreRight,
+      winner: this.winner,
+    };
+  }
 }
 
 module.exports = GameState;
