@@ -4,10 +4,13 @@ const fs = require('fs');
 const WebSocket = require('ws');
 
 const Connection = require('./lib/Connection');
+const RoomManager = require('./lib/RoomManager');
 const MESSAGE_TYPES = require('./lib/messageTypes');
 
 const PORT = process.env.PORT || 3000;
 const CLIENT_DIR = path.join(__dirname, '..', 'client');
+
+const roomManager = new RoomManager();
 
 const server = http.createServer((req, res) => {
   const filePath = req.url === '/' ? '/index.html' : req.url;
@@ -60,9 +63,30 @@ function handleMessage(connection, raw) {
   }
 
   switch (message.type) {
+    case MESSAGE_TYPES.JOIN_QUEUE:
+      handleJoinQueue(connection, message);
+      break;
+    case MESSAGE_TYPES.INPUT:
+      if (connection.room) connection.room.handleInput(connection, message.input);
+      break;
     default:
       connection.send(JSON.stringify({ type: MESSAGE_TYPES.ERROR, message: 'unknown_type' }));
   }
+}
+
+function handleJoinQueue(connection, message) {
+  if (message.name) connection.name = String(message.name).slice(0, 24);
+
+  const room = roomManager.findOrCreateRoom();
+  const side = room.addPlayer(connection);
+
+  if (!side) {
+    connection.send(JSON.stringify({ type: MESSAGE_TYPES.ERROR, message: 'room_full' }));
+    return;
+  }
+
+  connection.send(JSON.stringify({ type: MESSAGE_TYPES.WAITING_FOR_OPPONENT, side, roomId: room.id }));
+  room.startIfReady();
 }
 
 server.listen(PORT, () => {

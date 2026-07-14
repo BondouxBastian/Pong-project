@@ -43,6 +43,11 @@ class Room {
     }
   }
 
+  handleInput(connection, input) {
+    if (connection.side !== 'left' && connection.side !== 'right') return;
+    this.gameState.setInput(connection.side, input);
+  }
+
   startIfReady() {
     if (this.isFull() && !this.started) {
       this.started = true;
