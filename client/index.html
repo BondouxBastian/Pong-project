@@ -8,6 +8,8 @@
   <div id="lobby" class="screen">
     <input id="name-input" type="text" placeholder="Votre pseudo" maxlength="24" />
     <button id="play-btn">Jouer</button>
+    <button id="spectate-btn">Regarder une partie</button>
+    <button id="leaderboard-btn">Classement</button>
     <p id="lobby-status"></p>
   </div>
 
@@ -19,5 +21,22 @@
     </div>
     <canvas id="board" width="800" height="500"></canvas>
     <p id="game-status"></p>
+  </div>
+
+  <div id="gameover-screen" class="screen hidden">
+    <h2 id="gameover-title"></h2>
+    <button id="rematch-btn">Rejouer</button>
+    <button id="back-to-lobby-btn">Retour au lobby</button>
+  </div>
+
+  <div id="leaderboard-screen" class="screen hidden">
+    <h2>Classement</h2>
+    <table id="leaderboard-table">
+      <thead>
+        <tr><th>Joueur</th><th>Victoires</th><th>Défaites</th></tr>
+      </thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+    <button id="leaderboard-back-btn">Retour</button>
   </div>
 </div>
