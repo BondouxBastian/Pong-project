@@ -11,5 +11,19 @@ const InputHandler = (() => {
     if (code === 'ArrowDown' || code === 'KeyS') state.down = isDown;
   }
 
-  return { bind, state };
+  let sendInterval = null;
+
+  function startSending(sendFn, intervalMs = 50) {
+    stopSending();
+    sendInterval = setInterval(() => sendFn({ up: state.up, down: state.down }), intervalMs);
+  }
+
+  function stopSending() {
+    if (sendInterval) {
+      clearInterval(sendInterval);
+      sendInterval = null;
+    }
+  }
+
+  return { bind, state, startSending, stopSending };
 })();
