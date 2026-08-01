@@ -9,7 +9,22 @@ const Network = (() => {
     socket.addEventListener('open', () => handlers.open && handlers.open());
     socket.addEventListener('close', () => handlers.close && handlers.close());
     socket.addEventListener('error', (err) => handlers.error && handlers.error(err));
+    socket.addEventListener('message', (event) => {
+      const message = JSON.parse(event.data);
+      const handler = handlers[message.type];
+      if (handler) handler(message);
+    });
   }
 
-  return { connect };
+  function send(type, payload = {}) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type, ...payload }));
+    }
+  }
+
+  function on(type, callback) {
+    handlers[type] = callback;
+  }
+
+  return { connect, send, on };
 })();
