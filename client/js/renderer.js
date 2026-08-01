@@ -35,5 +35,22 @@ const Renderer = (() => {
     ctx.fill();
   }
 
-  return { drawStaticScene };
+  function drawState(state) {
+    drawBoard();
+
+    ctx.fillStyle = '#f2f2f2';
+    ctx.fillRect(PADDLE_MARGIN, state.leftPaddle.y, PADDLE_WIDTH, PADDLE_HEIGHT);
+    ctx.fillRect(
+      canvas.width - PADDLE_MARGIN - PADDLE_WIDTH,
+      state.rightPaddle.y,
+      PADDLE_WIDTH,
+      PADDLE_HEIGHT
+    );
+
+    ctx.beginPath();
+    ctx.arc(state.ball.x, state.ball.y, BALL_RADIUS, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  return { drawStaticScene, drawState };
 })();
