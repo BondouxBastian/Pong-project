@@ -48,3 +48,15 @@ input[type='text'] {
   color: white;
   margin: 4px;
 }
+
+#score-board {
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 8px;
+}
+
+#board {
+  background: #06060a;
+  border: 2px solid #2d7dd2;
+  border-radius: 4px;
+}
