@@ -11,5 +11,28 @@ const UI = (() => {
     screens[name].classList.remove('hidden');
   }
 
-  return { showScreen };
+  const scoreLeftEl = document.getElementById('score-left');
+  const scoreRightEl = document.getElementById('score-right');
+  const gameStatusEl = document.getElementById('game-status');
+  const lobbyStatusEl = document.getElementById('lobby-status');
+  const gameoverTitleEl = document.getElementById('gameover-title');
+
+  function updateScore(state) {
+    scoreLeftEl.textContent = state.scoreLeft;
+    scoreRightEl.textContent = state.scoreRight;
+  }
+
+  function setGameStatus(text) {
+    gameStatusEl.textContent = text;
+  }
+
+  function setLobbyStatus(text) {
+    lobbyStatusEl.textContent = text;
+  }
+
+  function setGameOverTitle(text) {
+    gameoverTitleEl.textContent = text;
+  }
+
+  return { showScreen, updateScore, setGameStatus, setLobbyStatus, setGameOverTitle };
 })();
