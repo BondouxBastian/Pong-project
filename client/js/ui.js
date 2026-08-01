@@ -34,5 +34,23 @@ const UI = (() => {
     gameoverTitleEl.textContent = text;
   }
 
-  return { showScreen, updateScore, setGameStatus, setLobbyStatus, setGameOverTitle };
+  const leaderboardBodyEl = document.getElementById('leaderboard-body');
+
+  function renderLeaderboard(ranking) {
+    leaderboardBodyEl.innerHTML = '';
+    ranking.forEach((entry) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${entry.name}</td><td>${entry.wins}</td><td>${entry.losses}</td>`;
+      leaderboardBodyEl.appendChild(row);
+    });
+  }
+
+  return {
+    showScreen,
+    updateScore,
+    setGameStatus,
+    setLobbyStatus,
+    setGameOverTitle,
+    renderLeaderboard,
+  };
 })();
