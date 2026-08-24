@@ -4,9 +4,13 @@
   "description": "Jeu Pong multijoueur en temps reel via WebSocket",
   "main": "server/index.js",
   "scripts": {
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "test": "jest"
   },
   "dependencies": {
     "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2"
   }
 }
