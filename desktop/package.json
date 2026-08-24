@@ -1,0 +1,22 @@
+{
+  "name": "pong-desktop",
+  "version": "1.0.0",
+  "description": "Client desktop (Electron) pour Pong Multijoueur",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^32.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.bondouxbastian.pong",
+    "productName": "Pong",
+    "files": ["main.js", "preload.js", "config.json"],
+    "win": { "target": "nsis" },
+    "mac": { "target": "dmg" },
+    "linux": { "target": "AppImage" }
+  }
+}
