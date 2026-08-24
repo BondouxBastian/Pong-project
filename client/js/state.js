@@ -1,3 +1,4 @@
+/* exported ClientState */
 const ClientState = {
   playerId: null,
   side: null,

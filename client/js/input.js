@@ -1,3 +1,4 @@
+/* exported InputHandler */
 const InputHandler = (() => {
   const state = { up: false, down: false };
 

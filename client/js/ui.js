@@ -1,3 +1,4 @@
+/* exported UI */
 const UI = (() => {
   const screens = {
     lobby: document.getElementById('lobby'),

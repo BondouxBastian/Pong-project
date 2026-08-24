@@ -1,3 +1,4 @@
+/* exported Network */
 const Network = (() => {
   let socket = null;
   let handlers = {};
