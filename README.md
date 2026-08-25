@@ -70,6 +70,32 @@ Chaque message a un champ `type` (voir `server/lib/messageTypes.js`).
 | `leaderboard` | `{ ranking }` | classement trié par victoires |
 | `error` | `{ message }` | erreur (ex : `room_full`, `no_active_room`) |
 
+## App desktop
+
+Un client desktop (Electron) est disponible dans `desktop/`. C'est une simple
+fenêtre qui charge la page du serveur — aucune logique de jeu dupliquée, le
+client web et le client desktop sont le même code.
+
+```
+cd desktop
+npm install
+npm start
+```
+
+Par défaut elle se connecte à `http://localhost:3000` (voir `desktop/config.json`).
+Pour la pointer vers le serveur déployé (Railway), soit modifier `serverUrl` dans
+`desktop/config.json`, soit lancer avec :
+
+```
+PONG_SERVER_URL=https://<ton-app>.up.railway.app npm start
+```
+
+Pour générer un exécutable installable (Windows/Mac/Linux) :
+
+```
+npm run build
+```
+
 ## Tests, qualité de code, CI/CD
 
 ```
@@ -79,6 +105,5 @@ npm run lint  # ESLint — style et détection d'erreurs (variables inutilisées
 
 - **CI** (`.github/workflows/ci.yml`) : à chaque push/PR sur `main`, lint + tests
   tournent sur Node 18.x et 20.x.
-- **CD** : le déploiement est géré par [Railway](https://railway.app), branché sur
-  `main`. Un déploiement n'a lieu que si la branche `main` est protégée par le
-  check CI (voir réglages du repo GitHub).
+- **CD** : voir [CD.md](CD.md) pour le détail du pipeline de déploiement
+  (Railway, configuration, limites connues, rollback).
