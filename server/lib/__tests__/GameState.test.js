@@ -27,6 +27,22 @@ describe('GameState', () => {
     expect(state.winner).toBe('left');
   });
 
+  test('declares the right player winner once they reach MAX_SCORE', () => {
+    const state = new GameState();
+    state.scoreRight = MAX_SCORE - 1;
+    state.ball.x = -state.ball.radius - 1;
+    state.handleScoring();
+    expect(state.scoreRight).toBe(MAX_SCORE);
+    expect(state.winner).toBe('right');
+  });
+
+  test('update() runs paddles, ball, collisions and scoring for a full tick', () => {
+    const state = new GameState();
+    const ballXBefore = state.ball.x;
+    state.update();
+    expect(state.ball.x).not.toBe(ballXBefore);
+  });
+
   test('resets the ball to center after a point when no one has won yet', () => {
     const state = new GameState();
     state.ball.x = -state.ball.radius - 1;

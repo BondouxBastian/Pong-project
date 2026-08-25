@@ -83,6 +83,50 @@ describe('Room', () => {
     );
   });
 
+  test('removing a spectator does not affect players or stop the loop', () => {
+    const room = new Room();
+    room.addPlayer(fakeConnection());
+    room.addPlayer(fakeConnection());
+    room.startIfReady();
+    const spectator = fakeConnection();
+    room.addSpectator(spectator);
+
+    room.removeConnection(spectator);
+
+    expect(room.spectators.size).toBe(0);
+    expect(room.started).toBe(true);
+    room.stopLoop();
+  });
+
+  test('tick() broadcasts GAME_OVER and stops the loop once there is a winner', () => {
+    const room = new Room();
+    const p1 = fakeConnection();
+    const p2 = fakeConnection();
+    room.addPlayer(p1);
+    room.addPlayer(p2);
+    room.gameState.winner = 'left';
+
+    room.tick();
+
+    expect(p1.send).toHaveBeenCalledWith(
+      JSON.stringify({ type: MESSAGE_TYPES.GAME_OVER, winner: 'left' })
+    );
+    expect(room.started).toBe(false);
+  });
+
+  test('restart() replaces the game state and restarts the loop if the room is full', () => {
+    const room = new Room();
+    room.addPlayer(fakeConnection());
+    room.addPlayer(fakeConnection());
+    room.gameState.winner = 'left';
+
+    room.restart();
+
+    expect(room.gameState.winner).toBeNull();
+    expect(room.started).toBe(true);
+    room.stopLoop();
+  });
+
   test('isEmpty() is true only when no players and no spectators remain', () => {
     const room = new Room();
     expect(room.isEmpty()).toBe(true);

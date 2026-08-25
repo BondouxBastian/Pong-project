@@ -74,7 +74,8 @@ Chaque message a un champ `type` (voir `server/lib/messageTypes.js`).
 
 Un client desktop (Electron) est disponible dans `desktop/`. C'est une simple
 fenêtre qui charge la page du serveur — aucune logique de jeu dupliquée, le
-client web et le client desktop sont le même code.
+client web et le client desktop sont le même code. Détails d'architecture,
+sécurité et packaging : voir [desktop/DESKTOP.md](desktop/DESKTOP.md).
 
 ```
 cd desktop

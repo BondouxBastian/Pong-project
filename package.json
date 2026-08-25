@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node server/index.js",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -18,5 +19,16 @@
     "@eslint/js": "^10.0.1",
     "eslint": "^10.9.1",
     "jest": "^30.4.2"
+  },
+  "jest": {
+    "collectCoverageFrom": ["server/lib/**/*.js"],
+    "coverageThreshold": {
+      "global": {
+        "statements": 90,
+        "branches": 80,
+        "functions": 90,
+        "lines": 95
+      }
+    }
   }
 }
